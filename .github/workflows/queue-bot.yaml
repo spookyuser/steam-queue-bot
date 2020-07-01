@@ -1,0 +1,24 @@
+name: Steam queue bot
+
+on:
+  push:
+  schedule:
+    - cron:  '0 01 * * *'
+
+jobs:
+  queue-bot:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7' 
+        architecture: 'x64' 
+    - name: Run queue bot
+      run: python queue-bot.py
+      env:
+        STEAM_REMEMBER_LOGIN: ${{ secrets.STEAM_REMEMBER_LOGIN }}
+        STEAM_LOGIN_SECURE: ${{ secrets.STEAM_LOGIN_SECURE }}
+        STEAM_MACHINE_AUTH: ${{ secrets.STEAM_MACHINE_AUTH }}
+        SESSION_ID: ${{ secrets.SESSION_ID }}
