@@ -18,13 +18,24 @@ Python 3.7
 2. Press F-12 to open up the developer tools of your browser
 3. If you're in chrome go to the Application tab, then cookies for store.steampowered.com
 4. Copy the `value` for the following cookies:
-    - `steamRemeberLogin`
-    - `steamMachineAuth`
+    - `sessionid`
     - `steamLoginSecure`
-    
-    ![](screenshots/cookies.png)
+    - [Also this one if you have it](https://github.com/JonasNilson/idle_master_extended/wiki/Login-methods): `steamMachinAuth`/ `steamParental`
 
 You can now either run the script _locally_ or as a _github action_.
+
+**Github Actions:**
+
+The script comes with a github action that is scheduled to run once a day automatically or manually. To set this up you need to:
+
+5. Fork this repo to your own github account
+6. In the forked repo open the github repo settings, then go to Secrets
+7. Create a new secret for each of the cookies you copied with the following names:
+    - `STEAM_MACHINE_AUTH`
+    - `STEAM_REMEMBER_LOGIN`
+    - `STEAM_LOGIN_SECURE`
+    ![](screenshots/secrets.png)
+8. The script should now automatically run once a day, be sure to disable the action when the sale is over, is there a way i could do this automatically?
 
 **Locally:**
 
@@ -41,16 +52,5 @@ You can now either run the script _locally_ or as a _github action_.
 
 ---
 
-**Github Actions:**
 
-The script comes with a github action that is scheduled to run once a day automatically. To set this up you need to:
-
-5. Fork this repo to your own github account
-6. In the forked repo open the github repo settings, then go to Secrets
-7. Create a new secret for each of the cookies you copied with the following names:
-    - `STEAM_MACHINE_AUTH`
-    - `STEAM_REMEMBER_LOGIN`
-    - `STEAM_LOGIN_SECURE`
-    ![](screenshots/secrets.png)
-8. The script should now automatically run once a day, be sure to disable the action when the sale is over
  
