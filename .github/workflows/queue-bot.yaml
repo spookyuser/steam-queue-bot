@@ -4,6 +4,7 @@ on:
   push:
   schedule:
     - cron:  '0 01 * * *'
+  workflow_dispatch:
 
 jobs:
   queue-bot:
