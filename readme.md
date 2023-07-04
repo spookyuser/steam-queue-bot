@@ -1,12 +1,12 @@
 # Steam Queue Bot
 
-A work in progress python script that can be used with github actions to automatically clear your steam queue, so that you can get your free trading cards during a sale event. 
+A work in progress python script that can be used with github actions to automatically clear your steam queue, so that you can get your free trading cards during a sale event.
 
 ## Status
 
 I'm still in the process of testing this script and I'm not even sure if its working at all yet because I keep accidentally clearing my queue :(
 
-On top of that I don't know how robust the method of using steam cookies for authentication is. According to https://dev.doctormckay.com/topic/365-cookies/ cookies can expire for many reasons. But my hope is that they will be able to last for the short time steam sales last. So a possibility is the script might end up working -  but only for a day.
+On top of that I don't know how robust the method of using steam cookies for authentication is. According to https://dev.doctormckay.com/topic/365-cookies/ cookies can expire for many reasons. But my hope is that they will be able to last for the short time steam sales last. So a possibility is the script might end up working - but only for a day.
 
 ## Dependencies
 
@@ -16,41 +16,34 @@ Python 3.7
 
 1. Go to https://store.steampowered.com/ in your browser and log in to steam
 2. Press F-12 to open up the developer tools of your browser
-3. If you're in chrome go to the Application tab, then cookies for store.steampowered.com
-4. Copy the `value` for the following cookies:
-    - `sessionid`
-    - `steamLoginSecure`
-    - [Also this one if you have it](https://github.com/JonasNilson/idle_master_extended/wiki/Login-methods): `steamMachinAuth`/ `steamParental`
+3. In the browser console paste `copy(document.cookie)` and press enter
 
 You can now either run the script _locally_ or as a _github action_.
 
 **Github Actions:**
 
-The script comes with a github action that is scheduled to run once a day automatically or manually. To set this up you need to:
+The script comes with a github action that is scheduled to run once a day automatically, or manually via workflow runs. To set this up you need to:
 
-5. Fork this repo to your own github account
-6. In the forked repo open the github repo settings, then go to Secrets
-7. Create a new secret for each of the cookies you copied with the following names:
-    - `STEAM_MACHINE_AUTH`
-    - `STEAM_REMEMBER_LOGIN`
-    - `STEAM_LOGIN_SECURE`
-    ![](screenshots/secrets.png)
-8. The script should now automatically run once a day, be sure to disable the action when the sale is over, is there a way i could do this automatically?
+- Fork this repo
+- Create a secret called `STEAM_COOKIE` and paste the value of the cookie you copied earlier into it
+- The script should now automatically run once a day, be sure to disable the action when the sale is over
+- ??? Profit
 
 **Locally:**
 
-5. Open [queue-bot.py](queue-bot.py). 
-6. Replace each `os.getenv()` at the bottom with the value of the cookie you just copied, so `os.getenv("STEAM_REMEMBER_LOGIN")` would turn into `38579248u572989` or whatever the value of the steamRemeberLogin cookie is. This should leave you with a line that looks something like this:
-    ```python
-    queue = SteamQueue(
-        "345789348924623456dgjhy",
-        "357257dfh34t6245734738",
-        "489276fhjksuiog76q984t6ht",
-    )
-    ```
-7. Run the script with `python queue-bot.py`
+- export an env variable called `STEAM_COOKIE` with the value of the cookie you copied earlier
+- run `python queue-bot.py`
 
----
+**GH cli:**
+Oh and you could also use the GH cli to set the secret instead.
+And run it manually if you want
 
+- Set cookie
+  - `gh secret set STEAM_COOKIE -b "<paste your cookie here>"`
+  - `gh secret set STEAM_COOKIE -b "$(pbpaste)"` (mac)
+- Run workflow manually
+  - `gh workflow run queue-bot.yml`
 
- 
+## TODO
+
+- Is there a way i could get this to disable automatically when the sale is over?

@@ -19,7 +19,4 @@ jobs:
     - name: Run queue bot
       run: python queue-bot.py
       env:
-        STEAM_REMEMBER_LOGIN: ${{ secrets.STEAM_REMEMBER_LOGIN }}
-        STEAM_LOGIN_SECURE: ${{ secrets.STEAM_LOGIN_SECURE }}
-        STEAM_MACHINE_AUTH: ${{ secrets.STEAM_MACHINE_AUTH }}
-        SESSION_ID: ${{ secrets.SESSION_ID }}
+        STEAM_COOKIE: ${{ secrets.STEAM_COOKIE }}

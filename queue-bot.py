@@ -4,34 +4,32 @@ import json
 import os
 
 
+def parse_cookie(cookie):
+    cookie = cookie.split(";")
+    cookie = [c.strip() for c in cookie]
+    cookie = [c.split("=") for c in cookie]
+    cookie = {c[0]: c[1] for c in cookie}
+    return cookie
+
+
 class SteamQueue:
-    def __init__(self, steam_remember_login, steam_login_secure, steam_machine_auth):
-        self.steam_machine_auth = steam_machine_auth
-        self.steam_login_secure = steam_login_secure
-        self.steam_remember_login = steam_remember_login
-        self.session_id = uuid.uuid4().hex
-        self.payload = {"sessionid": self.session_id}
+    def __init__(self, cookie_string: str):
+        self.cookie = parse_cookie(cookie_string)
+        session_id = self.cookie.get("sessionid")
+        if not session_id:
+            raise Exception("Session ID not found in cookie")
+        self.payload = {"sessionid": session_id, "queuetype": "0"}
         self.connection = http.client.HTTPSConnection("store.steampowered.com")
         self.headers = self.generate_headers()
-
-    def generate_cookie(self):
-        machine_auth_number = self.steam_login_secure.split("%7C")[0]
-        cookie = (
-            f"steamMachineAuth{machine_auth_number}={self.steam_machine_auth};"
-            f"steamRememberLogin={self.steam_remember_login};"
-            f"steamLoginSecure={self.steam_login_secure};"
-            f"sessionid={self.session_id};"
-        )
-        return {"cookie": cookie}
 
     def generate_headers(self):
         headers = {
             "connection": "keep-alive",
             "accept": "*/*",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Cookie": "; ".join([f"{k}={v}" for k, v in self.cookie.items()]),
         }
-        cookie = self.generate_cookie()
-        headers.update(cookie)
+        print(headers)
         return headers
 
     def get_explore_queue(self):
@@ -39,19 +37,22 @@ class SteamQueue:
             "POST",
             "/explore/generatenewdiscoveryqueue",
             urllib.parse.urlencode(self.payload),
-            self.headers,
+            headers=self.headers,
         )
+        # Debug
+        import pdb
+
+        pdb.set_trace()
         response = self.connection.getresponse()
         if response.status == 200:
             data = response.read()
+            print(data)
             print("Game queue generated")
             return json.loads(data.decode("utf-8"))["queue"]
         else:
-            print(
+            raise Exception(
                 f"Failed to generate queue (steam responded with code {response.status})"
             )
-            exit()
-            
 
     def clear_queue(self, app_ids):
         print("Visiting games in queue")
@@ -66,10 +67,9 @@ class SteamQueue:
 
 
 if __name__ == "__main__":
-    queue = SteamQueue(
-        os.getenv("STEAM_REMEMBER_LOGIN"),
-        os.getenv("STEAM_LOGIN_SECURE"),
-        os.getenv("STEAM_MACHINE_AUTH"),
-    )
+    cookie = os.environ.get("STEAM_COOKIE")
+    if not cookie:
+        raise Exception("STEAM_COOKIE environment variable not set")
+    queue = SteamQueue(cookie)
     app_ids = queue.get_explore_queue()
     queue.clear_queue(app_ids)
