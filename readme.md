@@ -40,7 +40,7 @@ And run it manually if you want
 
 - Set cookie
   - `gh secret set STEAM_COOKIE -b "<paste your cookie here>"`
-  - `gh secret set STEAM_COOKIE -b "$(pbpaste)"` (mac)
+  - `gh secret set STEAM_COOKIE -b "$(pbpaste)"` (mac)(paste this command first lol)
 - Run workflow manually
   - `gh workflow run queue-bot.yml`
 
