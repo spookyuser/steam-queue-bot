@@ -8,15 +8,17 @@ I'm still in the process of testing this script and I'm not even sure if its wor
 
 On top of that I don't know how robust the method of using steam cookies for authentication is. According to https://dev.doctormckay.com/topic/365-cookies/ cookies can expire for many reasons. But my hope is that they will be able to last for the short time steam sales last. So a possibility is the script might end up working - but only for a day.
 
+Right now i'm just parsing the entire cookie string stored on the steam page so that the script doesn't need to be updated when cookie names change. So the `STEAM_COOKIE` secret needs to be a plain cookie string like "cookie1=value1; cookie2=value2; cookie3=value3;". I'm not sure if this is the best way to do it, but it works for now.
+
 ## Dependencies
 
-Python 3.7
+Python 3.11
 
 ## Instructions
 
 1. Go to https://store.steampowered.com/ in your browser and log in to steam
 2. Press F-12 to open up the developer tools of your browser
-3. In the browser console paste `copy(document.cookie)` and press enter
+3. Either copy the entire cookie string from a request header to `store.steampowered.com/explore` (like from the network tab) or use this [chrome extension to do it](https://chrome.google.com/webstore/detail/storageace/cpbgcbmddckpmhfbdckeolkkhkjjmplo) (set the export type to key=value)
 
 You can now either run the script _locally_ or as a _github action_.
 
