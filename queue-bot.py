@@ -39,10 +39,6 @@ class SteamQueue:
             urllib.parse.urlencode(self.payload),
             headers=self.headers,
         )
-        # Debug
-        import pdb
-
-        pdb.set_trace()
         response = self.connection.getresponse()
         if response.status == 200:
             data = response.read()
