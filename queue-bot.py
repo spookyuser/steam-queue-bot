@@ -1,5 +1,4 @@
 import http.client, urllib.parse
-import uuid
 import json
 import os
 
